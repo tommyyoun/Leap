@@ -12943,9 +12943,9 @@ MonoBehaviour:
       m_Action: Player Controls
       m_Flags: 8
     m_Flags: 0
-  jumpHeight: 2.9
-  maxJumpHeight: 6
-  rotationSpeed: 5
+  jumpHeight: 4
+  maxJumpHeight: 5.5
+  rotationSpeed: 3.8
 --- !u!1001 &1661489369
 PrefabInstance:
   m_ObjectHideFlags: 0

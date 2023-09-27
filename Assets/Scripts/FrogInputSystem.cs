@@ -9,6 +9,7 @@ public class FrogInputSystem : MonoBehaviour
     private PlayerInput playerInput;
     private bool isGrounded;
     private ConstantForce gravity;
+    private Animator animator;
 
     public InputAction playerControls;
 
@@ -33,11 +34,12 @@ public class FrogInputSystem : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
+        animator = GetComponent<Animator>();
 
         PlayerInputActions playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         playerInputActions.Player.Jump.canceled += Jump;
-        //playerInputActions.Player.Rotate.performed += Rotate;
+        playerInputActions.Player.Jump.performed += ReadyJump;
 
         gravity = gameObject.AddComponent<ConstantForce>();
         updateGravity(new Vector3(0, -1.0f, 0));
@@ -55,6 +57,11 @@ public class FrogInputSystem : MonoBehaviour
         transform.Rotate(0f, rotateDirection.x * rotationSpeed, rotateDirection.y * rotationSpeed);
     }
 
+    public void ReadyJump(InputAction.CallbackContext context)
+    {
+        animator.SetBool("isReadyingJump", true);
+    }
+
     public void Jump(InputAction.CallbackContext context)
     {
         float calculatedJump;
@@ -62,6 +69,10 @@ public class FrogInputSystem : MonoBehaviour
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
+
+            // set animation for jump
+            animator.SetBool("isFlying", true);
+            animator.SetBool("isReadyingJump", false);
 
             // free rigid body constraints
             rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -85,6 +96,9 @@ public class FrogInputSystem : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
+
+        // reset animation for jump
+        animator.SetBool("isFlying", false);
 
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
