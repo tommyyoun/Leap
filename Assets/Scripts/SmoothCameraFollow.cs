@@ -13,6 +13,12 @@ public class SmoothCameraFollow : MonoBehaviour
 
     public InputAction cameraControls;
 
+    public void Start()
+    {
+        cameraControls.Enable();
+        cameraControls.performed += moveCamera;
+    }
+
     private void Awake()
     {
         _offset = transform.position - target.position;
@@ -22,5 +28,9 @@ public class SmoothCameraFollow : MonoBehaviour
     {
         Vector3 targetPosition = target.position + _offset;
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, smoothTime);
+    }
+
+    private void moveCamera(InputAction.CallbackContext context)
+    {
     }
 }
