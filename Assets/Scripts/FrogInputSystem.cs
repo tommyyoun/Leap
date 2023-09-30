@@ -96,6 +96,7 @@ public class FrogInputSystem : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
+        rb.constraints = RigidbodyConstraints.None;
 
         // reset animation for jump
         animator.SetBool("isFlying", false);
@@ -109,13 +110,13 @@ public class FrogInputSystem : MonoBehaviour
     private void stickToWall(ContactPoint contact)
     {
         rb.velocity = Vector3.zero;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        //rb.constraints = RigidbodyConstraints.FreezeAll;
 
-        var rot = Quaternion.FromToRotation(-transform.up, contact.normal);
+        var rot = Quaternion.FromToRotation(transform.up, contact.normal);
 
         updateGravity(-contact.normal);
 
-        transform.rotation *= rot;
+        //transform.rotation = rot;
     }
 
     private void updateGravity(Vector3 newGravity)
