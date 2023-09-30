@@ -110,11 +110,11 @@ public class FrogInputSystem : MonoBehaviour
         {
             StartCoroutine(stickToWall(collision.contacts[0]));
         }
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "TestLayer")
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "NoRotate")
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
-        if (LayerMask.LayerToName(collision.gameObject.layer) == "Another")
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "ResetRotation")
         {
             transform.rotation = new Quaternion(0, rb.rotation[1], 0, rb.rotation[3]);
             rb.velocity = Vector3.zero;
@@ -130,15 +130,15 @@ public class FrogInputSystem : MonoBehaviour
     {
         rb.velocity = Vector3.zero;
         //rb.constraints = RigidbodyConstraints.FreezeAll;
-        // rb.useGravity = false;
+        //rb.useGravity = false;
+
+        //var rot = Quaternion.FromToRotation(transform.up, contact.normal
+
+        //transform.rotation = rot;
 
         yield return new WaitForSeconds(0.225f);
 
-        var rot = Quaternion.FromToRotation(transform.up, contact.normal);
-
-        updateGravity(-contact.normal);
-
-        //transform.localRotation = rot;
+        updateGravity(-1.5f * contact.normal);
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
     }
