@@ -41,6 +41,7 @@ public class FrogInputSystem : MonoBehaviour
         playerInputActions.Player.Jump.canceled += Jump;
         playerInputActions.Player.Jump.performed += ReadyJump;
 
+        // rb.useGravity = false;
         gravity = gameObject.AddComponent<ConstantForce>();
         updateGravity(new Vector3(0, -1.0f, 0));
 
@@ -69,6 +70,7 @@ public class FrogInputSystem : MonoBehaviour
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
+            rb.constraints = RigidbodyConstraints.None;
 
             // set animation for jump
             animator.SetBool("isFlying", true);
@@ -76,6 +78,7 @@ public class FrogInputSystem : MonoBehaviour
 
             // free rigid body constraints
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+           // rb.useGravity = false;
 
             calculatedJump = (float)context.duration * jumpHeight;
 
@@ -97,25 +100,47 @@ public class FrogInputSystem : MonoBehaviour
     {
         isGrounded = true;
 
+        rb.constraints = RigidbodyConstraints.None;
+        //rb.useGravity = true;
+
         // reset animation for jump
         animator.SetBool("isFlying", false);
 
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
-            stickToWall(collision.contacts[0]);
+            StartCoroutine(stickToWall(collision.contacts[0]));
+        }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "TestLayer")
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Another")
+        {
+            transform.rotation = new Quaternion(0, rb.rotation[1], 0, rb.rotation[3]);
+            rb.velocity = Vector3.zero;
+            updateGravity(new Vector3(0, -1.0f, 0));
+        }
+        else
+        {
+            updateGravity(new Vector3(0, -1.0f, 0));
         }
     }
 
-    private void stickToWall(ContactPoint contact)
+    private IEnumerator stickToWall(ContactPoint contact)
     {
         rb.velocity = Vector3.zero;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
+        //rb.constraints = RigidbodyConstraints.FreezeAll;
+        // rb.useGravity = false;
 
-        var rot = Quaternion.FromToRotation(-transform.up, contact.normal);
+        yield return new WaitForSeconds(0.225f);
+
+        var rot = Quaternion.FromToRotation(transform.up, contact.normal);
 
         updateGravity(-contact.normal);
 
-        transform.rotation *= rot;
+        //transform.localRotation = rot;
+
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private void updateGravity(Vector3 newGravity)
