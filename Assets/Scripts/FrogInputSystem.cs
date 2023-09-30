@@ -10,6 +10,7 @@ public class FrogInputSystem : MonoBehaviour
     private bool isGrounded;
     private ConstantForce gravity;
     private Animator animator;
+    private Collider[] cols;
 
     public InputAction playerControls;
 
@@ -33,6 +34,7 @@ public class FrogInputSystem : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        cols = GetComponents<Collider>();
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponent<Animator>();
 
@@ -61,6 +63,11 @@ public class FrogInputSystem : MonoBehaviour
     public void ReadyJump(InputAction.CallbackContext context)
     {
         animator.SetBool("isReadyingJump", true);
+
+        //foreach (Collider col in cols)
+        //{
+        //    col.isTrigger = false;
+        //}
     }
 
     public void Jump(InputAction.CallbackContext context)
@@ -70,7 +77,7 @@ public class FrogInputSystem : MonoBehaviour
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
-            rb.constraints = RigidbodyConstraints.None;
+            //rb.constraints = RigidbodyConstraints.None;
 
             // set animation for jump
             animator.SetBool("isFlying", true);
@@ -99,9 +106,9 @@ public class FrogInputSystem : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
-
-        rb.constraints = RigidbodyConstraints.None;
         //rb.useGravity = true;
+
+        //rb.constraints = RigidbodyConstraints.None;
 
         // reset animation for jump
         animator.SetBool("isFlying", false);
@@ -116,31 +123,35 @@ public class FrogInputSystem : MonoBehaviour
         }
         if (LayerMask.LayerToName(collision.gameObject.layer) == "ResetRotation")
         {
-            transform.rotation = new Quaternion(0, rb.rotation[1], 0, rb.rotation[3]);
+            transform.rotation = new Quaternion(0, rb.rotation.y, 0, rb.rotation.w);
             rb.velocity = Vector3.zero;
             updateGravity(new Vector3(0, -1.0f, 0));
         }
         else
         {
+            rb.constraints = RigidbodyConstraints.None;
             updateGravity(new Vector3(0, -1.0f, 0));
         }
     }
 
     private IEnumerator stickToWall(ContactPoint contact)
     {
+        //if (!animator.GetBool("isReadyingJump")) {
         rb.velocity = Vector3.zero;
-        //rb.constraints = RigidbodyConstraints.FreezeAll;
-        //rb.useGravity = false;
-
-        //var rot = Quaternion.FromToRotation(transform.up, contact.normal
-
-        //transform.rotation = rot;
-
-        yield return new WaitForSeconds(0.225f);
-
-        updateGravity(-1.5f * contact.normal);
+            //rb.useGravity = false;
+            //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
+        
+        yield return new WaitForSecondsRealtime(0.18f);
+        
+        updateGravity(new Vector3(-0.8f * contact.normal.x, -contact.normal.y, -0.8f * contact.normal.z));
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
+
+            //foreach (Collider col in cols)
+            //{
+            //    col.isTrigger = true;
+            //}
+        //}
     }
 
     private void updateGravity(Vector3 newGravity)
