@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class TrapController : MonoBehaviour
 {
+    private GameObject[] traps;
     private GameObject trap;
     private Rigidbody rb;
-    private Vector3 startingPos = new Vector3(-0.8640066f, 0.582f, 5.881f);
+    private Vector3 startingPos;
     // Start is called before the first frame update
     void Start()
     {
-        trap = GameObject.Find("Trap");
-        rb = GetComponent<Rigidbody>();
+        startingPos = transform.position;
+        traps = GameObject.FindGameObjectsWithTag("Trap");
+
+        foreach (GameObject tr in traps)
+        {
+            if (tr.transform.position == startingPos)
+            {
+                trap = tr;
+            }
+        }
+
+        rb = trap.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
-        transform.position = startingPos;
     }
 
     // Update is called once per frame
@@ -31,6 +41,16 @@ public class TrapController : MonoBehaviour
         }
     }
 
+    private IEnumerator waitForGravity()
+    {
+        yield return new WaitForSeconds(2);
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        StartCoroutine(hide());
+    }
+
     private IEnumerator hide()
     {
         yield return new WaitForSeconds(2);
@@ -40,15 +60,5 @@ public class TrapController : MonoBehaviour
 
         transform.position = startingPos;
         rb.isKinematic = true;
-    }
-
-    private IEnumerator waitForGravity()
-    {
-        yield return new WaitForSeconds(2);
-
-        rb.isKinematic = false;
-        rb.useGravity = true;
-
-        StartCoroutine(hide());
     }
 }

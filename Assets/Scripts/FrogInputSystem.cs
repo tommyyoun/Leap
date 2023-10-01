@@ -122,6 +122,17 @@ public class FrogInputSystem : MonoBehaviour
         {
             StartCoroutine(stickToWall(collision.contacts[0]));
         }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Powerup")
+        {
+            collision.gameObject.SetActive(false);
+            maxJumpHeight = 8.5f;
+
+            StartCoroutine(powerupTimer());
+        }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Trap")
+        {
+            StartCoroutine(reactivateTrap(collision.gameObject));
+        }
         else if (LayerMask.LayerToName(collision.gameObject.layer) == "NoRotate")
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -134,10 +145,6 @@ public class FrogInputSystem : MonoBehaviour
             rb.velocity = Vector3.zero;
             updateGravity(new Vector3(0, -1.0f, 0));
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-        }
-        else if (LayerMask.LayerToName(collision.gameObject.layer) == "Trap")
-        {
-            StartCoroutine(reactivateTrap(collision.gameObject));
         }
         else
         {
@@ -170,6 +177,13 @@ public class FrogInputSystem : MonoBehaviour
         yield return new WaitForSecondsRealtime(6f);
 
         trap.SetActive(true);
+    }
+
+    private IEnumerator powerupTimer()
+    {
+        yield return new WaitForSecondsRealtime(10);
+
+        maxJumpHeight = 5f;
     }
 
     private IEnumerator reset()
