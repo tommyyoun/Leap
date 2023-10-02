@@ -44,6 +44,10 @@ public class FrogInputSystem : MonoBehaviour
         playerInputActions.Player.Jump.canceled += Jump;
         playerInputActions.Player.Jump.performed += ReadyJump;
 
+        // Lock cursor to screen
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+
         // rb.useGravity = false;
         gravity = gameObject.AddComponent<ConstantForce>();
         updateGravity(new Vector3(0, -1.0f, 0));
