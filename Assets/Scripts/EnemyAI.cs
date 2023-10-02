@@ -33,6 +33,7 @@ public class EnemyAI : MonoBehaviour
     public Vector3 directionToPlayer;
     private void Start()
     {
+       
         player = GameObject.Find("Frog").transform;
         enemyRigidbody = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
