@@ -105,7 +105,7 @@ public class FrogInputSystem : MonoBehaviour
 
     public void Rotate(InputAction.CallbackContext context)
     {
-        
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -121,6 +121,17 @@ public class FrogInputSystem : MonoBehaviour
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
             StartCoroutine(stickToWall(collision.contacts[0]));
+        }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Powerup")
+        {
+            collision.gameObject.SetActive(false);
+            maxJumpHeight = 8.5f;
+
+            StartCoroutine(powerupTimer());
+        }
+        if (LayerMask.LayerToName(collision.gameObject.layer) == "Trap")
+        {
+            StartCoroutine(reactivateTrap(collision.gameObject));
         }
         else if (LayerMask.LayerToName(collision.gameObject.layer) == "NoRotate")
         {
@@ -145,20 +156,34 @@ public class FrogInputSystem : MonoBehaviour
     {
         //if (!animator.GetBool("isReadyingJump")) {
         rb.velocity = Vector3.zero;
-            //rb.useGravity = false;
-            //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
-        
+        //rb.useGravity = false;
+        //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
+
         yield return new WaitForSecondsRealtime(0.18f);
-        
+
         updateGravity(new Vector3(-0.8f * transform.up.x, -transform.up.y, -0.8f * transform.up.z));
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
 
-            //foreach (Collider col in cols)
-            //{
-            //    col.isTrigger = true;
-            //}
+        //foreach (Collider col in cols)
+        //{
+        //    col.isTrigger = true;
         //}
+        //}
+    }
+
+    private IEnumerator reactivateTrap(GameObject trap)
+    {
+        yield return new WaitForSecondsRealtime(6f);
+
+        trap.SetActive(true);
+    }
+
+    private IEnumerator powerupTimer()
+    {
+        yield return new WaitForSecondsRealtime(10);
+
+        maxJumpHeight = 5f;
     }
 
     private IEnumerator reset()
@@ -173,7 +198,7 @@ public class FrogInputSystem : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
-        
+
         if (count == 25)
         {
             transform.position = originalPos + new Vector3(0, .2f, 0);
