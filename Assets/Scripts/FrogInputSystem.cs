@@ -58,6 +58,32 @@ public class FrogInputSystem : MonoBehaviour
     private void Update()
     {
         rotateDirection = playerControls.ReadValue<Vector2>();
+        StartCoroutine(reset());
+
+        if (Input.GetKeyUp("1"))
+        {
+            transform.position = new Vector3(2.38f, 0.099f, -98.54f);
+            transform.rotation = Quaternion.identity;
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (Input.GetKeyUp("2"))
+        {
+            transform.position = new Vector3(3.16f, 16.015f, -57.21f);
+            transform.rotation = Quaternion.identity;
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (Input.GetKeyUp("3"))
+        {
+            transform.position = new Vector3(3.16f, 41.278f, -20.75f);
+            transform.rotation = Quaternion.identity;
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (Input.GetKeyUp("4"))
+        {
+            transform.position = new Vector3(4.301f, 52.899f, -8.81f);
+            transform.rotation = Quaternion.identity;
+            rb.constraints = RigidbodyConstraints.None;
+        }
     }
 
     void FixedUpdate()
@@ -104,7 +130,7 @@ public class FrogInputSystem : MonoBehaviour
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
         }
 
-        StartCoroutine(reset());
+        //StartCoroutine(reset());
     }
 
     public void Rotate(InputAction.CallbackContext context)
@@ -154,6 +180,8 @@ public class FrogInputSystem : MonoBehaviour
         {
             updateGravity(new Vector3(0, -1.0f, 0));
         }
+
+        //StartCoroutine(reset());
     }
 
     private IEnumerator stickToWall(ContactPoint contact)
@@ -208,12 +236,42 @@ public class FrogInputSystem : MonoBehaviour
             transform.position = originalPos + new Vector3(0, .2f, 0);
             animator.SetBool("isFlying", false);
             animator.SetBool("isReadyingJump", false);
+
+            updateGravity(new Vector3(0, -1f, 0));
         }
 
-        if ((transform.rotation.x > 0.62 && transform.rotation.x < 2.2) || (transform.rotation.z > 0.62 && transform.rotation.z < 2.2) ||
-(transform.rotation.x < -0.62 && transform.rotation.x > -2.2) || (transform.rotation.x < -0.62 && transform.rotation.x > -2.2))
+        bool xl = transform.rotation.x > 0.62;
+        bool zl = transform.rotation.z > 0.62;
+        bool xs = transform.rotation.x < -0.62;
+        bool zs = transform.rotation.z < -0.62;
+
+        if (xl)
         {
-            transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
+            transform.rotation = new Quaternion(0.45f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+            transform.position = transform.position + new Vector3(0, .015f, 0);
+            updateGravity(new Vector3(0, -1f, 0));
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (zl)
+        {
+            transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0.4f, transform.rotation.w);
+            transform.position = transform.position + new Vector3(0, .015f, 0);
+            updateGravity(new Vector3(0, -1f, 0));
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (xs)
+        {
+            transform.rotation = new Quaternion(-0.45f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+            transform.position = transform.position + new Vector3(0, .015f, 0);
+            updateGravity(new Vector3(0, -1f, 0));
+            rb.constraints = RigidbodyConstraints.None;
+        }
+        if (zs)
+        {
+            transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, -0.4f, transform.rotation.w);
+            transform.position = transform.position + new Vector3(0, .015f, 0);
+            updateGravity(new Vector3(0, -1f, 0));
+            rb.constraints = RigidbodyConstraints.None;
         }
     }
 
