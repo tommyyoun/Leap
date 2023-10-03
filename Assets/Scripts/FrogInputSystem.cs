@@ -176,6 +176,10 @@ public class FrogInputSystem : MonoBehaviour
             updateGravity(new Vector3(0, -1.0f, 0));
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+        else if (LayerMask.LayerToName(collision.gameObject.layer) == "BridgeEdge")
+        {
+            rb.constraints = RigidbodyConstraints.None;
+        }
         else
         {
             updateGravity(new Vector3(0, -1.0f, 0));
@@ -233,6 +237,7 @@ public class FrogInputSystem : MonoBehaviour
 
         if (count == 25)
         {
+            rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.position = originalPos + new Vector3(0, .2f, 0);
             animator.SetBool("isFlying", false);
             animator.SetBool("isReadyingJump", false);
