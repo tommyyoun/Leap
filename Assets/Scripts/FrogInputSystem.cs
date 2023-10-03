@@ -163,7 +163,7 @@ public class FrogInputSystem : MonoBehaviour
         //rb.useGravity = false;
         //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
 
-        yield return new WaitForSecondsRealtime(0.15f);
+        yield return new WaitForSecondsRealtime(0.18f);
 
         updateGravity(new Vector3(-0.8f * transform.up.x, -transform.up.y, -0.8f * transform.up.z));
 
