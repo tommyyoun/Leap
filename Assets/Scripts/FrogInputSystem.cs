@@ -191,7 +191,7 @@ public class FrogInputSystem : MonoBehaviour
         //rb.useGravity = false;
         //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
 
-        yield return new WaitForSecondsRealtime(0.18f);
+        yield return new WaitForSecondsRealtime(0.15f);
 
         updateGravity(new Vector3(-0.8f * transform.up.x, -transform.up.y, -0.8f * transform.up.z));
 
@@ -238,6 +238,7 @@ public class FrogInputSystem : MonoBehaviour
             animator.SetBool("isReadyingJump", false);
 
             updateGravity(new Vector3(0, -1f, 0));
+            rb.constraints = RigidbodyConstraints.None;
         }
 
         bool xl = transform.rotation.x > 0.62;
