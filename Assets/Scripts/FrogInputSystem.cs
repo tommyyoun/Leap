@@ -18,6 +18,7 @@ public class FrogInputSystem : MonoBehaviour
     public float jumpHeight;
     public float maxJumpHeight;
     public float rotationSpeed;
+    public float minJumpHeight;
 
     Vector2 rotateDirection = Vector2.zero;
 
@@ -125,6 +126,9 @@ public class FrogInputSystem : MonoBehaviour
             if (calculatedJump > maxJumpHeight)
             {
                 calculatedJump = maxJumpHeight;
+            }
+            else if (calculatedJump< minJumpHeight) {
+                calculatedJump = minJumpHeight;
             }
 
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
