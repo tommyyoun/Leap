@@ -243,6 +243,7 @@ public class FrogInputSystem : MonoBehaviour
         {
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.position = originalPos + new Vector3(0, .2f, 0);
+            transform.rotation = new Quaternion(transform.rotation.x/2, transform.rotation.y, transform.rotation.z/2, transform.rotation.w);
             animator.SetBool("isFlying", false);
             animator.SetBool("isReadyingJump", false);
 
