@@ -11,20 +11,20 @@ public class TrapController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startingPos = transform.position;
-        traps = GameObject.FindGameObjectsWithTag("Trap");
+        this.startingPos = this.transform.position;
+        this.traps = GameObject.FindGameObjectsWithTag("Trap");
 
-        foreach (GameObject tr in traps)
+        foreach (GameObject tr in this.traps)
         {
-            if (tr.transform.position == startingPos)
+            if (tr.transform.position == this.startingPos)
             {
-                trap = tr;
+                this.trap = tr;
             }
         }
 
-        rb = trap.GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.useGravity = false;
+        this.rb = GetComponent<Rigidbody>();
+        this.rb.isKinematic = true;
+        this.rb.useGravity = false;
     }
 
     // Update is called once per frame
@@ -37,7 +37,7 @@ public class TrapController : MonoBehaviour
     {
         if (collision.gameObject.name == "Frog")
         {
-            StartCoroutine(waitForGravity());
+            StartCoroutine(this.waitForGravity());
         }
     }
 
@@ -45,20 +45,20 @@ public class TrapController : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
 
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        this.rb.isKinematic = false;
+        this.rb.useGravity = true;
 
-        StartCoroutine(hide());
+        StartCoroutine(this.hide());
     }
 
     private IEnumerator hide()
     {
         yield return new WaitForSeconds(2);
 
-        rb.useGravity = false;
-        trap.SetActive(false);
+        this.rb.useGravity = false;
+        this.trap.SetActive(false);
 
-        transform.position = startingPos;
-        rb.isKinematic = true;
+        this.transform.position = startingPos;
+        this.rb.isKinematic = true;
     }
 }

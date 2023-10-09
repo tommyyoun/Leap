@@ -106,12 +106,12 @@ public class FrogInputSystem : MonoBehaviour
     {
         float calculatedJump;
 
-        originalPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
             //rb.constraints = RigidbodyConstraints.None;
+
+            originalPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
             // set animation for jump
             animator.SetBool("isFlying", true);
@@ -166,6 +166,8 @@ public class FrogInputSystem : MonoBehaviour
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Trap")
         {
             StartCoroutine(reactivateTrap(collision.gameObject));
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.velocity = Vector3.zero;
         }
         else if (LayerMask.LayerToName(collision.gameObject.layer) == "NoRotate")
         {
@@ -229,6 +231,7 @@ public class FrogInputSystem : MonoBehaviour
     private IEnumerator reset()
     {
         int count = 0;
+        int counter = 0;
 
         for (int i = 0; i < 25; i++)
         {
@@ -236,10 +239,14 @@ public class FrogInputSystem : MonoBehaviour
             {
                 count++;
             }
+            else if (!isGrounded)
+            {
+                counter++;
+            }
             yield return new WaitForSeconds(0.1f);
         }
 
-        if (count == 25)
+        if (count == 25 || counter == 25)
         {
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.position = originalPos + new Vector3(0, .2f, 0);
