@@ -18,6 +18,7 @@ public class FrogInputSystem : MonoBehaviour
     public float jumpHeight;
     public float maxJumpHeight;
     public float rotationSpeed;
+    public float minJumpHeight;
 
     Vector2 rotateDirection = Vector2.zero;
 
@@ -48,7 +49,6 @@ public class FrogInputSystem : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
 
-        // rb.useGravity = false;
         gravity = gameObject.AddComponent<ConstantForce>();
         updateGravity(new Vector3(0, -1.0f, 0));
 
@@ -94,23 +94,17 @@ public class FrogInputSystem : MonoBehaviour
     public void ReadyJump(InputAction.CallbackContext context)
     {
         animator.SetBool("isReadyingJump", true);
-
-        //foreach (Collider col in cols)
-        //{
-        //    col.isTrigger = false;
-        //}
     }
 
     public void Jump(InputAction.CallbackContext context)
     {
         float calculatedJump;
 
-        originalPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
-            //rb.constraints = RigidbodyConstraints.None;
+
+            originalPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
             // set animation for jump
             animator.SetBool("isFlying", true);
@@ -118,7 +112,6 @@ public class FrogInputSystem : MonoBehaviour
 
             // free rigid body constraints
             rb.constraints = RigidbodyConstraints.FreezeRotation;
-           // rb.useGravity = false;
 
             calculatedJump = (float)context.duration * jumpHeight;
 
@@ -126,11 +119,12 @@ public class FrogInputSystem : MonoBehaviour
             {
                 calculatedJump = maxJumpHeight;
             }
+            else if (calculatedJump< minJumpHeight) {
+                calculatedJump = minJumpHeight;
+            }
 
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
         }
-
-        //StartCoroutine(reset());
     }
 
     public void Rotate(InputAction.CallbackContext context)
@@ -141,7 +135,6 @@ public class FrogInputSystem : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         isGrounded = true;
-        //rb.useGravity = true;
 
         rb.constraints = RigidbodyConstraints.None;
 
@@ -162,12 +155,14 @@ public class FrogInputSystem : MonoBehaviour
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Trap")
         {
             StartCoroutine(reactivateTrap(collision.gameObject));
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.velocity = Vector3.zero;
         }
         else if (LayerMask.LayerToName(collision.gameObject.layer) == "NoRotate")
         {
             rb.constraints = RigidbodyConstraints.FreezeRotation;
             rb.velocity = Vector3.zero;
-            updateGravity(new Vector3(0, -1.0f, 0));
+            //updateGravity(new Vector3(0, -1.0f, 0));
         }
         else if (LayerMask.LayerToName(collision.gameObject.layer) == "ResetRotation")
         {
@@ -180,32 +175,37 @@ public class FrogInputSystem : MonoBehaviour
         {
             rb.constraints = RigidbodyConstraints.None;
         }
+        else if (LayerMask.LayerToName(collision.gameObject.layer) == "Cloud")
+        {
+            updateGravity(new Vector3(0, -1.0f, 0));
+            StartCoroutine(stickToCloud(collision.contacts[0]));
+        }
         else
         {
             updateGravity(new Vector3(0, -1.0f, 0));
         }
-
-        //StartCoroutine(reset());
     }
 
     private IEnumerator stickToWall(ContactPoint contact)
     {
-        //if (!animator.GetBool("isReadyingJump")) {
         rb.velocity = Vector3.zero;
-        //rb.useGravity = false;
-        //var rot = Quaternion.FromToRotation(transform.up, contact.normal);
 
-        yield return new WaitForSecondsRealtime(0.15f);
+        yield return new WaitForSecondsRealtime(0.2f);
 
         updateGravity(new Vector3(-0.8f * transform.up.x, -transform.up.y, -0.8f * transform.up.z));
 
         rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
 
-        //foreach (Collider col in cols)
-        //{
-        //    col.isTrigger = true;
-        //}
-        //}
+    private IEnumerator stickToCloud(ContactPoint contact)
+    {
+        rb.velocity = Vector3.zero;
+
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        updateGravity(new Vector3(-0.6f * transform.up.x, -0.4f * transform.up.y, -0.6f * transform.up.z));
+
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     private IEnumerator reactivateTrap(GameObject trap)
@@ -225,6 +225,7 @@ public class FrogInputSystem : MonoBehaviour
     private IEnumerator reset()
     {
         int count = 0;
+        int counter = 0;
 
         for (int i = 0; i < 25; i++)
         {
@@ -232,13 +233,18 @@ public class FrogInputSystem : MonoBehaviour
             {
                 count++;
             }
+            else if (!isGrounded)
+            {
+                counter++;
+            }
             yield return new WaitForSeconds(0.1f);
         }
 
-        if (count == 25)
+        if (count == 25 || counter == 25)
         {
             rb.constraints = RigidbodyConstraints.FreezeAll;
             transform.position = originalPos + new Vector3(0, .2f, 0);
+            transform.rotation = new Quaternion(transform.rotation.x/2, transform.rotation.y, transform.rotation.z/2, transform.rotation.w);
             animator.SetBool("isFlying", false);
             animator.SetBool("isReadyingJump", false);
 
@@ -246,38 +252,38 @@ public class FrogInputSystem : MonoBehaviour
             rb.constraints = RigidbodyConstraints.None;
         }
 
-        bool xl = transform.rotation.x > 0.62;
-        bool zl = transform.rotation.z > 0.62;
-        bool xs = transform.rotation.x < -0.62;
-        bool zs = transform.rotation.z < -0.62;
+        bool xl = transform.rotation.x > 0.6;
+        bool zl = transform.rotation.z > 0.6;
+        bool xs = transform.rotation.x < -0.6;
+        bool zs = transform.rotation.z < -0.6;
 
         if (xl)
         {
-            transform.rotation = new Quaternion(0.45f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
-            transform.position = transform.position + new Vector3(0, .015f, 0);
-            updateGravity(new Vector3(0, -1f, 0));
-            rb.constraints = RigidbodyConstraints.None;
+            transform.rotation = new Quaternion(0.4f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+            transform.position = transform.position + new Vector3(0, .01f, 0);
+            //updateGravity(new Vector3(0, -1f, 0));
+            //rb.constraints = RigidbodyConstraints.None;
         }
         if (zl)
         {
             transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, 0.4f, transform.rotation.w);
             transform.position = transform.position + new Vector3(0, .015f, 0);
-            updateGravity(new Vector3(0, -1f, 0));
-            rb.constraints = RigidbodyConstraints.None;
+            //updateGravity(new Vector3(0, -1f, 0));
+            //rb.constraints = RigidbodyConstraints.None;
         }
         if (xs)
         {
-            transform.rotation = new Quaternion(-0.45f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+            transform.rotation = new Quaternion(-0.4f, transform.rotation.y, transform.rotation.z, transform.rotation.w);
             transform.position = transform.position + new Vector3(0, .015f, 0);
-            updateGravity(new Vector3(0, -1f, 0));
-            rb.constraints = RigidbodyConstraints.None;
+            //updateGravity(new Vector3(0, -1f, 0));
+            //rb.constraints = RigidbodyConstraints.None;
         }
         if (zs)
         {
             transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, -0.4f, transform.rotation.w);
             transform.position = transform.position + new Vector3(0, .015f, 0);
-            updateGravity(new Vector3(0, -1f, 0));
-            rb.constraints = RigidbodyConstraints.None;
+            //updateGravity(new Vector3(0, -1f, 0));
+            //rb.constraints = RigidbodyConstraints.None;
         }
     }
 
