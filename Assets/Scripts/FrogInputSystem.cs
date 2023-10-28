@@ -12,6 +12,8 @@ public class FrogInputSystem : MonoBehaviour
     private Animator animator;
     private Collider[] cols;
     private Vector3 originalPos;
+    private int checkpointStatus;
+    private int skillPoints;
 
     public InputAction playerControls;
 
@@ -44,6 +46,9 @@ public class FrogInputSystem : MonoBehaviour
         playerInputActions.Player.Enable();
         playerInputActions.Player.Jump.canceled += Jump;
         playerInputActions.Player.Jump.performed += ReadyJump;
+
+        checkpointStatus = 0;
+        skillPoints = 0;
 
         // Lock cursor to screen
         Cursor.lockState = CursorLockMode.Confined;
@@ -83,6 +88,44 @@ public class FrogInputSystem : MonoBehaviour
             transform.position = new Vector3(4.301f, 52.899f, -8.81f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+        }
+        if (Input.GetKeyUp("c")) {
+            if (checkpointStatus == 0)
+            {
+                transform.position = new Vector3(2.38f, 0.099f, -98.54f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 1)
+            {
+                transform.position = new Vector3(3.16f, 16.015f, -57.21f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 2)
+            {
+                transform.position = new Vector3(3.16f, 41.278f, -20.75f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 3)
+            {
+                transform.position = new Vector3(4.301f, 52.899f, -8.81f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+        }
+        if (transform.position.z > -60f && checkpointStatus < 1) {
+            checkpointStatus = 1;
+            skillPoints++;
+        }
+        if (transform.position.z > -21f && checkpointStatus < 2) {
+            checkpointStatus = 2;
+            skillPoints++;
+        }
+        if (transform.position.x < 7f && transform.position.y > 52.8f && transform.position.z > -9f && checkpointStatus < 3) {
+            checkpointStatus = 3;
+            skillPoints++;
         }
     }
 
