@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Powerup
   - Trap
+  - Resist
+  - IncJump
+  - AimAssist
   layers:
   - Default
   - TransparentFX

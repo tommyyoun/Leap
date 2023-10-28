@@ -7,16 +7,24 @@ public class SkillMenu : MonoBehaviour
    
 {
     public static bool Paused = false;
-    public GameObject SkillMenuCanvas; 
+    public GameObject SkillMenuCanvas;
+    public RectTransform rectTransform;
+    private Vector2 mousePos;
+    private FrogInputSystem script;
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1.0f;
+        mousePos = Input.mousePosition;
+        rectTransform = GetComponent<RectTransform>();
+        script = GameObject.FindWithTag("Player").GetComponent<FrogInputSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        mousePos = Input.mousePosition;
+
          if (Input.GetKeyDown(KeyCode.Tab)) 
         { 
 
@@ -29,6 +37,15 @@ public class SkillMenu : MonoBehaviour
             {
                 Stop();
             }
+        }
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("Resist") && script.skillPoints > 0) {
+            //fill in logic for Resistance skill
+        }
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("IncJump") && script.skillPoints > 0) {
+            //fil in logic for Increased Jump skill
+        }
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0) {
+            //fill in logic for Aim Assist skill
         }
     }
 

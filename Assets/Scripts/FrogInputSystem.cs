@@ -13,7 +13,7 @@ public class FrogInputSystem : MonoBehaviour
     private Collider[] cols;
     private Vector3 originalPos;
     private int checkpointStatus;
-    private int skillPoints;
+    public int skillPoints;
 
     public InputAction playerControls;
 
