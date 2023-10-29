@@ -52,6 +52,9 @@ public class SkillMenu : MonoBehaviour
                                       && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !resistBought) {
             //fill in logic for Resistance skill
 
+            //actually increase max jump height and decrease skill points by 1
+            script.skillPoints -= 1;
+
             //make it so it can only be bought once
             resistBought = true;
 
@@ -65,12 +68,19 @@ public class SkillMenu : MonoBehaviour
             //make it so it can only be bought once
             incJumpBought = true;
 
+            //actually increase max jump height and decrease skill points by 1
+            script.maxJumpHeight = 6.5f;
+            script.skillPoints -= 1;
+
             // display on hud
             displaySkill(1);
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
                                       && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0 && !aimAssistBought) {
             //fill in logic for Aim Assist skill
+
+            //actually increase max jump height and decrease skill points by 1
+            script.skillPoints -= 1;
 
             //make it so it can only be bought once
             aimAssistBought = true;

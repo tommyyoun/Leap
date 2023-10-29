@@ -42,6 +42,8 @@ public class FrogInputSystem : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         animator = GetComponent<Animator>();
 
+        maxJumpHeight = 5f;
+
         PlayerInputActions playerInputActions = new PlayerInputActions();
         playerInputActions.Player.Enable();
         playerInputActions.Player.Jump.canceled += Jump;
