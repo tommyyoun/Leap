@@ -10,10 +10,12 @@ public class SkillMenu : MonoBehaviour
     public RectTransform rectTransform;
     private Vector2 mousePos;
     private FrogInputSystem script;
+    private bool resistBought;
+    private bool aimAssistBought;
+    private bool incJumpBought;
 
     private GameObject tempSkillObject;
     private static float relativeSkillXPosition = 0;
-
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,10 @@ public class SkillMenu : MonoBehaviour
         mousePos = Input.mousePosition;
         rectTransform = GetComponent<RectTransform>();
         script = GameObject.FindWithTag("Player").GetComponent<FrogInputSystem>();
+
+        resistBought = false;
+        incJumpBought = false;
+        aimAssistBought = false;
     }
 
     // Update is called once per frame
@@ -42,20 +48,32 @@ public class SkillMenu : MonoBehaviour
                 Stop();
             }
         }
-        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("Resist") && script.skillPoints > 0) {
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
+                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !resistBought) {
             //fill in logic for Resistance skill
+
+            //make it so it can only be bought once
+            resistBought = true;
 
             // display on hud
             displaySkill(0);
         }
-        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("IncJump") && script.skillPoints > 0) {
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
+                                      && rectTransform.CompareTag("IncJump") && script.skillPoints > 0 && !incJumpBought) {
             //fil in logic for Increased Jump skill
+
+            //make it so it can only be bought once
+            incJumpBought = true;
 
             // display on hud
             displaySkill(1);
         }
-        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0) {
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
+                                      && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0 && !aimAssistBought) {
             //fill in logic for Aim Assist skill
+
+            //make it so it can only be bought once
+            aimAssistBought = true;
 
             // display on hud
             displaySkill(2);
