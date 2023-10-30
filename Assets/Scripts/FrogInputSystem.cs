@@ -29,6 +29,7 @@ public class FrogInputSystem : MonoBehaviour
 
     [SerializeField]
     private TrajectoryLine tLine;
+    
 
     private void OnEnable()
     {
@@ -69,7 +70,11 @@ public class FrogInputSystem : MonoBehaviour
     }
 
     private void Update()
-    {   
+    {
+
+
+        tLine.ShowTLine(transform.position, 3 * (transform.forward + transform.up)); 
+
         rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
 

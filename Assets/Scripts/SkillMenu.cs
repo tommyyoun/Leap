@@ -13,7 +13,15 @@ public class SkillMenu : MonoBehaviour
     public RectTransform rectTransform;
     private Vector2 mousePos;
     private FrogInputSystem script;
-    
+
+    private bool frogBrakes;
+    private bool aimAssistBought;
+    private bool incJumpBought;
+
+    private GameObject tempSkillObject;
+    private static float relativeSkillXPosition = 0;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,7 +51,7 @@ public class SkillMenu : MonoBehaviour
             }
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
-                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !resistBought) {
+                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !frogBrakes) {
             //fill in logic for Resistance skill or brake skill, it could be easily changed you'd just need to update all uses of the word resist with "frog brakes" or
             //something that gets the point across
 
@@ -51,7 +59,7 @@ public class SkillMenu : MonoBehaviour
             script.skillPoints -= 1;
 
             //make it so it can only be bought once
-            resistBought = true;
+            frogBrakes = true;
 
             // display on hud
             displaySkill(0);
@@ -72,6 +80,11 @@ public class SkillMenu : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0) {
            
+            script.skillPoints -= 1;
+
+            aimAssistBought = true;
+
+            displaySkill(2);
         }
     }
 
