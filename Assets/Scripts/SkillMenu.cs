@@ -21,6 +21,8 @@ public class SkillMenu : MonoBehaviour
     private GameObject tempSkillObject;
     private static float relativeSkillXPosition = 0;
 
+    private GameObject line;
+
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +31,13 @@ public class SkillMenu : MonoBehaviour
         mousePos = Input.mousePosition;
         rectTransform = GetComponent<RectTransform>();
         script = GameObject.FindWithTag("Player").GetComponent<FrogInputSystem>();
-        
+
+        //line = GameObject.FindWithTag("Player").GetComponentInChildren<GameObject>(true);
+
+        line = GameObject.FindWithTag("Player").transform.Find("Line").gameObject;
+        frogBrakes = false;
+        aimAssistBought = false;
+        incJumpBought = false;
     }
 
     // Update is called once per frame
@@ -37,9 +45,8 @@ public class SkillMenu : MonoBehaviour
     {
         mousePos = Input.mousePosition;
 
-         if (Input.GetKeyDown(KeyCode.Tab)) 
+        if (Input.GetKeyDown(KeyCode.Tab)) 
         { 
-
             if (Paused)
             {
                 Play();
@@ -59,7 +66,7 @@ public class SkillMenu : MonoBehaviour
             script.skillPoints -= 1;
 
             //make it so it can only be bought once
-            frogBrakes = true;
+            script.frogBrakes = true;
 
             // display on hud
             displaySkill(0);
@@ -78,9 +85,12 @@ public class SkillMenu : MonoBehaviour
             // display on hud
             displaySkill(1);
         }
-        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0) {
+        if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
+                                      && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0 && !aimAssistBought) {
            
             script.skillPoints -= 1;
+
+            line.SetActive(true);
 
             aimAssistBought = true;
 

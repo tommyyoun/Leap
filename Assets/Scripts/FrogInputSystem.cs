@@ -23,7 +23,7 @@ public class FrogInputSystem : MonoBehaviour
     public float rotationSpeed;
     public float minJumpHeight;
     public float calculatedJump;
-
+    public bool frogBrakes;
 
     Vector2 rotateDirection = Vector2.zero;
 
@@ -71,13 +71,15 @@ public class FrogInputSystem : MonoBehaviour
 
     private void Update()
     {
-
-
         tLine.ShowTLine(transform.position, 3 * (transform.forward + transform.up)); 
 
         rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
 
+        if (frogBrakes && Input.GetKeyUp("s") && animator.GetBool("isFlying")) {
+            Vector3 slam = new Vector3(0f, -1.7f, 0f);
+            this.slam(slam);
+        }
         if (Input.GetKeyUp("1"))
         {
             transform.position = new Vector3(2.38f, 0.099f, -98.54f);
@@ -342,10 +344,14 @@ public class FrogInputSystem : MonoBehaviour
         }
     }
 
-    
-
     private void updateGravity(Vector3 newGravity)
     {
         gravity.force = 9.81f * newGravity;
+    }
+
+    public void slam(Vector3 slam) {
+        rb.velocity = Vector3.zero;
+
+        updateGravity(slam);
     }
 }
