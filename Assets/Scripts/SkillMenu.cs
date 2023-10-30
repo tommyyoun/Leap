@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
+using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class SkillMenu : MonoBehaviour
@@ -11,6 +14,7 @@ public class SkillMenu : MonoBehaviour
     public RectTransform rectTransform;
     private Vector2 mousePos;
     private FrogInputSystem script;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +22,7 @@ public class SkillMenu : MonoBehaviour
         mousePos = Input.mousePosition;
         rectTransform = GetComponent<RectTransform>();
         script = GameObject.FindWithTag("Player").GetComponent<FrogInputSystem>();
+        
     }
 
     // Update is called once per frame
@@ -45,14 +50,14 @@ public class SkillMenu : MonoBehaviour
             //fil in logic for Increased Jump skill
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos) && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0) {
-            //fill in logic for Aim Assist skill
+           
         }
     }
 
     void Stop()
     {
         SkillMenuCanvas.SetActive(true);
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;          
         Paused = true; 
     }
     public void Play()

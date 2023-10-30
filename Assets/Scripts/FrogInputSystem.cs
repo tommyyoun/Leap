@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,12 +18,17 @@ public class FrogInputSystem : MonoBehaviour
 
     public InputAction playerControls;
 
-    public float jumpHeight;
+    public float jumpHeight = 1;
     public float maxJumpHeight;
     public float rotationSpeed;
     public float minJumpHeight;
+    public float calculatedJump;
+
 
     Vector2 rotateDirection = Vector2.zero;
+
+    [SerializeField]
+    private TrajectoryLine tLine;
 
     private void OnEnable()
     {
@@ -61,7 +67,7 @@ public class FrogInputSystem : MonoBehaviour
     }
 
     private void Update()
-    {
+    {   
         rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
 
@@ -141,8 +147,6 @@ public class FrogInputSystem : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        float calculatedJump;
-
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
@@ -167,6 +171,7 @@ public class FrogInputSystem : MonoBehaviour
             }
 
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
+            
         }
     }
 
@@ -329,6 +334,8 @@ public class FrogInputSystem : MonoBehaviour
             //rb.constraints = RigidbodyConstraints.None;
         }
     }
+
+    
 
     private void updateGravity(Vector3 newGravity)
     {
