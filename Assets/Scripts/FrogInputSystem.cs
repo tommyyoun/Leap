@@ -24,6 +24,8 @@ public class FrogInputSystem : MonoBehaviour
     public float minJumpHeight;
     public float calculatedJump;
     public bool frogBrakes;
+    public bool aimAssistBought;
+    public bool incJumpBought;
 
     Vector2 rotateDirection = Vector2.zero;
 
@@ -85,26 +87,31 @@ public class FrogInputSystem : MonoBehaviour
             transform.position = new Vector3(2.38f, 0.099f, -98.54f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("2"))
         {
             transform.position = new Vector3(3.16f, 16.015f, -57.21f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("3"))
         {
             transform.position = new Vector3(3.16f, 41.278f, -20.75f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("4"))
         {
             transform.position = new Vector3(4.301f, 52.899f, -8.81f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("c")) {
+            rb.velocity = Vector3.zero;
             if (checkpointStatus == 0)
             {
                 transform.position = new Vector3(2.38f, 0.099f, -98.54f);
