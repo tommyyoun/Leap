@@ -58,7 +58,7 @@ public class SkillMenu : MonoBehaviour
             }
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
-                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !frogBrakes) {
+                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !script.frogBrakes) {
             //fill in logic for Resistance skill or brake skill, it could be easily changed you'd just need to update all uses of the word resist with "frog brakes" or
             //something that gets the point across
 
