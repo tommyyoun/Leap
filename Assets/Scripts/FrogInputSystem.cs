@@ -13,7 +13,7 @@ public class FrogInputSystem : MonoBehaviour
     private Collider[] cols;
     private Vector3 originalPos;
 
-    public InputAction playerControls;
+    //public InputAction playerControls;
 
     public float jumpHeight;
     public float maxJumpHeight;
@@ -24,12 +24,12 @@ public class FrogInputSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        playerControls.Enable();
+        //playerControls.Enable();
     }
 
     private void OnDisable()
     {
-        playerControls.Disable();
+        //playerControls.Disable();
     }
 
     // Start is called before the first frame update
@@ -37,13 +37,13 @@ public class FrogInputSystem : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         cols = GetComponents<Collider>();
-        playerInput = GetComponent<PlayerInput>();
+        //playerInput = GetComponent<PlayerInput>();
         animator = GetComponent<Animator>();
 
-        PlayerInputActions playerInputActions = new PlayerInputActions();
-        playerInputActions.Player.Enable();
-        playerInputActions.Player.Jump.canceled += Jump;
-        playerInputActions.Player.Jump.performed += ReadyJump;
+        //PlayerInputActions playerInputActions = new PlayerInputActions();
+        //playerInputActions.Player.Enable();
+        //playerInputActions.Player.Jump.canceled += Jump;
+        //playerInputActions.Player.Jump.performed += ReadyJump;
 
         // Lock cursor to screen
         Cursor.lockState = CursorLockMode.Confined;
@@ -57,7 +57,6 @@ public class FrogInputSystem : MonoBehaviour
 
     private void Update()
     {
-        rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
 
         if (Input.GetKeyUp("1"))
@@ -100,6 +99,8 @@ public class FrogInputSystem : MonoBehaviour
     {
         float calculatedJump;
 
+        animator.SetBool("isReadyingJump", true);
+
         if (context.canceled && isGrounded)
         {
             isGrounded = false;
@@ -129,7 +130,7 @@ public class FrogInputSystem : MonoBehaviour
 
     public void Rotate(InputAction.CallbackContext context)
     {
-
+        rotateDirection = context.ReadValue<Vector2>();
     }
 
     private void OnCollisionEnter(Collision collision)
