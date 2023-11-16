@@ -12,10 +12,10 @@ public class SkillMenu : MonoBehaviour
     public GameObject SkillHUD;
     public RectTransform rectTransform;
     private Vector2 mousePos;
-    private FrogInputSystem script;
+    private List<FrogInputSystem> scripts = new List<FrogInputSystem>();
     private GameObject tempSkillObject;
     private static float relativeSkillXPosition = 0;
-    private GameObject line;
+    private List<GameObject> lines = new List<GameObject>();
 
 
     // Start is called before the first frame update
@@ -24,8 +24,12 @@ public class SkillMenu : MonoBehaviour
         Time.timeScale = 1.0f;
         mousePos = Input.mousePosition;
         rectTransform = GetComponent<RectTransform>();
-        script = GameObject.FindWithTag("Player").GetComponent<FrogInputSystem>();
-        line = GameObject.FindWithTag("Player").transform.Find("Line").gameObject;
+        GameObject[] playerParents = GameObject.FindGameObjectsWithTag("playerParent");
+
+        foreach (GameObject g in playerParents) {
+            lines.Add(g.transform.Find("LineArrow").gameObject);
+            scripts.Add(g.transform.Find("Frog").gameObject.GetComponent<FrogInputSystem>());
+        }
     }
 
     // Update is called once per frame
@@ -46,41 +50,49 @@ public class SkillMenu : MonoBehaviour
             }
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
-                                      && rectTransform.CompareTag("Resist") && script.skillPoints > 0 && !script.frogBrakes) {
+                                      && rectTransform.CompareTag("Resist") && scripts[0].skillPoints > 0 && !scripts[0].frogBrakes) {
             //fill in logic for Resistance skill or brake skill, it could be easily changed you'd just need to update all uses of the word resist with "frog brakes" or
             //something that gets the point across
 
             //actually increase max jump height and decrease skill points by 1
-            script.skillPoints -= 1;
+            scripts[0].skillPoints -= 1;
+            scripts[1].skillPoints -= 1;
 
             //make it so it can only be bought once
-            script.frogBrakes = true;
+            scripts[0].frogBrakes = true;
+            scripts[1].frogBrakes = true;
 
             // display on hud
             displaySkill(0);
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
-                                      && rectTransform.CompareTag("IncJump") && script.skillPoints > 0 && !script.incJumpBought) {
+                                      && rectTransform.CompareTag("IncJump") && scripts[0].skillPoints > 0 && !scripts[0].incJumpBought) {
             //fil in logic for Increased Jump skill
 
             //make it so it can only be bought once
-            script.incJumpBought = true;
+            scripts[0].incJumpBought = true;
+            scripts[1].incJumpBought = true;
 
             //actually increase max jump height and decrease skill points by 1
-            script.maxJumpHeight = 6.5f;
-            script.skillPoints -= 1;
+            scripts[0].maxJumpHeight = 6.5f;
+            scripts[0].skillPoints -= 1;
+            scripts[1].maxJumpHeight = 6.5f;
+            scripts[1].skillPoints -= 1;
 
             // display on hud
             displaySkill(1);
         }
         if (Input.GetMouseButtonUp(0) && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos)
-                                      && rectTransform.CompareTag("AimAssist") && script.skillPoints > 0 && !script.aimAssistBought) {
+                                      && rectTransform.CompareTag("AimAssist") && scripts[0].skillPoints > 0 && !scripts[0].aimAssistBought) {
            
-            script.skillPoints -= 1;
+            scripts[0].skillPoints -= 1;
+            scripts[1].skillPoints -= 1;
 
-            line.SetActive(true);
+            lines[0].SetActive(true);
+            lines[1].SetActive(true);
 
-            script.aimAssistBought = true;
+            scripts[0].aimAssistBought = true;
+            scripts[1].aimAssistBought = true;
 
             displaySkill(2);
         }

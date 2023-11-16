@@ -29,7 +29,7 @@ public class FrogInputSystem : MonoBehaviour
 
     Vector2 rotateDirection = Vector2.zero;
 
-    [SerializeField]
+    //[SerializeField]
     private TrajectoryLine tLine;
 
 
@@ -58,6 +58,13 @@ public class FrogInputSystem : MonoBehaviour
         // playerInputActions.Player.Jump.canceled += Jump;
         // playerInputActions.Player.Jump.performed += ReadyJump;
 
+        // if (this.gameObject.tag == "playerone") {
+        //     tLine = GameObject.FindWithTag("LineArrow");
+        // }
+        // else {
+        //     tLine = GameObject.FindWithTag("LineArrow2");
+        // }
+
         checkpointStatus = 0;
         skillPoints = 0;
 
@@ -73,7 +80,7 @@ public class FrogInputSystem : MonoBehaviour
 
     private void Update()
     {
-        // tLine.ShowTLine(transform.position, 3 * (transform.forward + transform.up));
+        //tLine.ShowTLine(transform.position, 3 * (transform.forward + transform.up));
         //
         // rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
