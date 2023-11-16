@@ -86,7 +86,7 @@ public class FrogInputSystem : MonoBehaviour
         StartCoroutine(reset());
 
         if (frogBrakes && Input.GetKeyUp("s") && animator.GetBool("isFlying")) {
-            Vector3 slam = new Vector3(0f, -1.7f, 0f);
+            Vector3 slam = new Vector3(0f, -1f, 0f);
             this.slam(slam);
         }
         if (Input.GetKeyUp("1"))
