@@ -216,6 +216,11 @@ public class FrogInputSystem : MonoBehaviour
         // reset animation for jump
         animator.SetBool("isFlying", false);
 
+        if (collision.gameObject.tag == "Ship") {
+            //This is simply a test. Whatever logic you want to actually put for the end of the game
+            //put it here:
+            Debug.Log("You Win!");
+        }
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
             StartCoroutine(stickToWall(collision.contacts[0]));

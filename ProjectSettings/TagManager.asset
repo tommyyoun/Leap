@@ -12,6 +12,7 @@ TagManager:
   - LineArrow
   - LineArrow2
   - playerParent
+  - Ship
   layers:
   - Default
   - TransparentFX
@@ -40,7 +41,7 @@ TagManager:
   - 
   - P1 Cam
   - P2 Cam
-  - 
+  - Ship
   - 
   - 
   - 
