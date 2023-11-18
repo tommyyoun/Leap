@@ -6,6 +6,14 @@ TagManager:
   tags:
   - Powerup
   - Trap
+  - Resist
+  - IncJump
+  - AimAssist
+  - LineArrow
+  - LineArrow2
+  - playerParent
+  - Ship
+  - Audio
   layers:
   - Default
   - TransparentFX
@@ -34,7 +42,7 @@ TagManager:
   - 
   - P1 Cam
   - P2 Cam
-  - 
+  - Ship
   - 
   - 
   - 

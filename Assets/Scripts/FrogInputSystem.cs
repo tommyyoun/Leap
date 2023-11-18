@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 
 public class FrogInputSystem : MonoBehaviour
 {
@@ -12,15 +14,27 @@ public class FrogInputSystem : MonoBehaviour
     private Animator animator;
     private Collider[] cols;
     private Vector3 originalPos;
+    private int checkpointStatus;
+    public int skillPoints;
 
     //public InputAction playerControls;
 
-    public float jumpHeight;
+    public float jumpHeight = 1;
     public float maxJumpHeight;
     public float rotationSpeed;
     public float minJumpHeight;
+    public float calculatedJump;
+    public bool frogBrakes;
+    public bool aimAssistBought;
+    public bool incJumpBought;
 
     Vector2 rotateDirection = Vector2.zero;
+
+    //[SerializeField]
+    private TrajectoryLine tLine;
+
+    SoundManager sounds; 
+
 
     private void OnEnable()
     {
@@ -40,10 +54,22 @@ public class FrogInputSystem : MonoBehaviour
         //playerInput = GetComponent<PlayerInput>();
         animator = GetComponent<Animator>();
 
-        //PlayerInputActions playerInputActions = new PlayerInputActions();
-        //playerInputActions.Player.Enable();
-        //playerInputActions.Player.Jump.canceled += Jump;
-        //playerInputActions.Player.Jump.performed += ReadyJump;
+        maxJumpHeight = 5f;
+
+        // PlayerInputActions playerInputActions = new PlayerInputActions();
+        // playerInputActions.Player.Enable();
+        // playerInputActions.Player.Jump.canceled += Jump;
+        // playerInputActions.Player.Jump.performed += ReadyJump;
+
+        // if (this.gameObject.tag == "playerone") {
+        //     tLine = GameObject.FindWithTag("LineArrow");
+        // }
+        // else {
+        //     tLine = GameObject.FindWithTag("LineArrow2");
+        // }
+
+        checkpointStatus = 0;
+        skillPoints = 0;
 
         // Lock cursor to screen
         Cursor.lockState = CursorLockMode.Confined;
@@ -53,35 +79,87 @@ public class FrogInputSystem : MonoBehaviour
         updateGravity(new Vector3(0, -1.0f, 0));
 
         isGrounded = true;
+
+        
     }
 
     private void Update()
     {
+        //tLine.ShowTLine(transform.position, 3 * (transform.forward + transform.up));
+        //
+        // rotateDirection = playerControls.ReadValue<Vector2>();
         StartCoroutine(reset());
 
+        if (frogBrakes && Input.GetKeyUp("s") && animator.GetBool("isFlying")) {
+            Vector3 slam = new Vector3(0f, -.5f, 0f);
+            this.slam(slam);
+        }
         if (Input.GetKeyUp("1"))
         {
             transform.position = new Vector3(2.38f, 0.099f, -98.54f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("2"))
         {
             transform.position = new Vector3(3.16f, 16.015f, -57.21f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("3"))
         {
             transform.position = new Vector3(3.16f, 41.278f, -20.75f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
         }
         if (Input.GetKeyUp("4"))
         {
             transform.position = new Vector3(4.301f, 52.899f, -8.81f);
             transform.rotation = Quaternion.identity;
             rb.constraints = RigidbodyConstraints.None;
+            rb.velocity = Vector3.zero;
+        }
+        if (Input.GetKeyUp("c")) {
+            rb.velocity = Vector3.zero;
+            if (checkpointStatus == 0)
+            {
+                transform.position = new Vector3(2.38f, 0.099f, -98.54f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 1)
+            {
+                transform.position = new Vector3(3.16f, 16.015f, -57.21f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 2)
+            {
+                transform.position = new Vector3(3.16f, 41.278f, -20.75f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            if (checkpointStatus == 3)
+            {
+                transform.position = new Vector3(4.301f, 52.899f, -8.81f);
+                transform.rotation = Quaternion.identity;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+        }
+        if (transform.position.z > -60f && checkpointStatus < 1) {
+            checkpointStatus = 1;
+            skillPoints++;
+        }
+        if (transform.position.z > -21f && checkpointStatus < 2) {
+            checkpointStatus = 2;
+            skillPoints++;
+        }
+        if (transform.position.x < 7f && transform.position.y > 52.8f && transform.position.z > -9f && checkpointStatus < 3) {
+            checkpointStatus = 3;
+            skillPoints++;
         }
     }
 
@@ -125,6 +203,9 @@ public class FrogInputSystem : MonoBehaviour
             }
 
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
+            sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+            sounds.PlaySound(sounds.jumpSound);
+
         }
     }
 
@@ -142,6 +223,12 @@ public class FrogInputSystem : MonoBehaviour
         // reset animation for jump
         animator.SetBool("isFlying", false);
 
+        if (collision.gameObject.tag == "Ship") {
+            //This is simply a test. Whatever logic you want to actually put for the end of the game
+            //put it here:
+            SceneManager.LoadScene("End Screen");
+
+        }
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
             StartCoroutine(stickToWall(collision.contacts[0]));
@@ -291,5 +378,14 @@ public class FrogInputSystem : MonoBehaviour
     private void updateGravity(Vector3 newGravity)
     {
         gravity.force = 9.81f * newGravity;
+    }
+
+    public void slam(Vector3 slam) {
+        rb.velocity = Vector3.zero;
+        sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+        sounds.PlaySound(sounds.SlamSound);
+        
+
+        updateGravity(slam);
     }
 }

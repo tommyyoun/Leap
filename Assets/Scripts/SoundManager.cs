@@ -6,7 +6,19 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
-    [SerializeField] private AudioSource musicSource, sfxSource;
+
+    [SerializeField] AudioSource musicSource;
+    [SerializeField] AudioSource sfxSource;
+
+    [Header("--------AudioClips-----")]
+    public AudioClip background;
+    public AudioClip MenuSound; 
+    public AudioClip pushSound;
+    public AudioClip deathSound;
+    public AudioClip jumpSound;
+    public AudioClip SlamSound;
+
+
 
     private void Awake()
     {
