@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 
 public class FrogInputSystem : MonoBehaviour
 {
@@ -218,7 +220,8 @@ public class FrogInputSystem : MonoBehaviour
         if (collision.gameObject.tag == "Ship") {
             //This is simply a test. Whatever logic you want to actually put for the end of the game
             //put it here:
-            Debug.Log("You Win!");
+            SceneManager.LoadScene("End Screen");
+
         }
         if (LayerMask.LayerToName(collision.gameObject.layer) == "Wall")
         {
