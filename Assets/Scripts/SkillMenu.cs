@@ -55,10 +55,14 @@ public class SkillMenu : MonoBehaviour
 
             //actually increase max jump height and decrease skill points by 1
             scripts[0].skillPoints -= 1;
+
+            if(scripts.Count > 1)
             scripts[1].skillPoints -= 1;
 
             //make it so it can only be bought once
             scripts[0].frogBrakes = true;
+
+            if (scripts.Count > 1)
             scripts[1].frogBrakes = true;
 
             // display on hud
@@ -70,13 +74,17 @@ public class SkillMenu : MonoBehaviour
 
             //make it so it can only be bought once
             scripts[0].incJumpBought = true;
-            scripts[1].incJumpBought = true;
+            if (scripts.Count > 1)
+                scripts[1].incJumpBought = true;
 
             //actually increase max jump height and decrease skill points by 1
             scripts[0].maxJumpHeight = 6.5f;
             scripts[0].skillPoints -= 1;
-            scripts[1].maxJumpHeight = 6.5f;
-            scripts[1].skillPoints -= 1;
+            if (scripts.Count > 1)
+            {
+                scripts[1].maxJumpHeight = 6.5f;
+                scripts[1].skillPoints -= 1;
+            }
 
             // display on hud
             displaySkill(1);
@@ -85,13 +93,16 @@ public class SkillMenu : MonoBehaviour
                                       && rectTransform.CompareTag("AimAssist") && scripts[0].skillPoints > 0 && !scripts[0].aimAssistBought) {
            
             scripts[0].skillPoints -= 1;
-            scripts[1].skillPoints -= 1;
+            if (scripts.Count > 1)
+                scripts[1].skillPoints -= 1;
 
             lines[0].SetActive(true);
-            lines[1].SetActive(true);
+            if (scripts.Count > 1)
+                lines[1].SetActive(true);
 
             scripts[0].aimAssistBought = true;
-            scripts[1].aimAssistBought = true;
+            if (scripts.Count > 1)
+                scripts[1].aimAssistBought = true;
 
             displaySkill(2);
         }
