@@ -13,6 +13,7 @@ TagManager:
   - LineArrow2
   - playerParent
   - Ship
+  - Audio
   layers:
   - Default
   - TransparentFX

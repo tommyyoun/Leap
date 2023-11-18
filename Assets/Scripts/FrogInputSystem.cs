@@ -33,6 +33,8 @@ public class FrogInputSystem : MonoBehaviour
     //[SerializeField]
     private TrajectoryLine tLine;
 
+    SoundManager sounds; 
+
 
     private void OnEnable()
     {
@@ -77,6 +79,8 @@ public class FrogInputSystem : MonoBehaviour
         updateGravity(new Vector3(0, -1.0f, 0));
 
         isGrounded = true;
+
+        
     }
 
     private void Update()
@@ -199,6 +203,8 @@ public class FrogInputSystem : MonoBehaviour
             }
 
             rb.AddForce(calculatedJump * (transform.forward + transform.up), ForceMode.Impulse);
+            sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+            sounds.PlaySound(sounds.jumpSound);
 
         }
     }
@@ -376,6 +382,9 @@ public class FrogInputSystem : MonoBehaviour
 
     public void slam(Vector3 slam) {
         rb.velocity = Vector3.zero;
+        sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+        sounds.PlaySound(sounds.SlamSound);
+        
 
         updateGravity(slam);
     }

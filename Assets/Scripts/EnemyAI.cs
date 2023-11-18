@@ -10,6 +10,7 @@ public class EnemyAI : MonoBehaviour
     public float pushForce = 10f; // Adjust this value to control the force of the push.
     private Transform player;
     private Rigidbody enemyRigidbody;
+    SoundManager sounds;
 
 
 
@@ -128,6 +129,8 @@ public class EnemyAI : MonoBehaviour
         {
             snake.SetTrigger("Attack");
             enemyRigidbody.AddForce(transform.forward * pushForce, ForceMode.Force);
+            sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+            sounds.PlaySound(sounds.pushSound);
             alreadypushed = true;
             Invoke(nameof(ResetAttack), timeBetweenpush);
         }

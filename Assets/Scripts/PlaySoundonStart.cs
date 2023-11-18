@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlaySoundonStart : MonoBehaviour
 {
-    [SerializeField] private AudioClip clip; 
+    SoundManager sounds;
 
     // Start is called before the first frame update
     void Start()
     {
-        SoundManager.Instance.PlaySound(clip);
+        sounds = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundManager>();
+        sounds.PlayMusic(sounds.MenuSound);
     }
-
 }
+
