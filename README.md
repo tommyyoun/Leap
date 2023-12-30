@@ -1,6 +1,8 @@
 # Leap
 You (and maybe a friend) are at the bottom of a very large mountainous region. After growing tired of your boring life, you have decided to climb to the top and search for a better one. Legends do speak of a mysterious machine and a Frog God… what could all of this mean? Could the Frog God be real? Does he have a paradise in the heavens? Is the mysterious machine a lie? The only way to find out is to make it to the top and find out what lies in store!
 
+Play now at tommyyoun.github.io/Leap
+
 ![image](https://github.com/tommyyoun/Leap/assets/7256102/32bd714a-adb7-44f2-999f-db334d87bbfd)
 
 ## Gameplay
